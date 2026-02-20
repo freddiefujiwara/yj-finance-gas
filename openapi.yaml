@@ -3,6 +3,9 @@ info:
   title: Yahoo Finance JP Fetcher API
   description: A GAS Web App to fetch HTML content from Yahoo Finance JP.
   version: 1.0.0
+servers:
+  - url: https://script.google.com/macros/s/AKfycbx6iFGnB5EaSVedN5mk8F1L0iO9orwZZiOz_2m6wIRzHA1XsU555ib0Ex2LMCR1nLOvhw
+    description: Production server
 paths:
   /exec:
     get:
