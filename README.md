@@ -1,22 +1,22 @@
-# Yahoo Finance JP Fetcher API (GAS)
+# General Purpose URL Fetcher API (GAS)
 
-This is a Google Apps Script (GAS) web application that fetches the HTML content of a ticker symbol's page from Yahoo Finance Japan.
+This is a Google Apps Script (GAS) web application that fetches the content of any provided URL.
 
 ## Features
 
-- Fetches HTML content from `https://finance.yahoo.co.jp/quote/{{SYMBOL}}`.
+- Fetches content from any HTTP/HTTPS URL.
 - Returns a structured JSON response.
-- Handles missing parameters, network errors, and non-200 HTTP status codes.
+- Validates URL format and handles fetch errors.
 
 ## Usage
 
 Once deployed as a Web App, you can access it via a GET request:
 
-`GET https://script.google.com/macros/s/AKfycbx6iFGnB5EaSVedN5mk8F1L0iO9orwZZiOz_2m6wIRzHA1XsU555ib0Ex2LMCR1nLOvhw/exec?s=4755.T`
+`GET https://script.google.com/macros/s/AKfycbx6iFGnB5EaSVedN5mk8F1L0iO9orwZZiOz_2m6wIRzHA1XsU555ib0Ex2LMCR1nLOvhw/exec?u=https://example.com`
 
 ### Query Parameters
 
-- `s` (required): The ticker symbol (e.g., `4755.T` for Rakuten).
+- `u` (required): The target URL to fetch (must start with `http://` or `https://`).
 
 ### Response Format
 
@@ -24,7 +24,7 @@ Once deployed as a Web App, you can access it via a GET request:
 
 ```json
 {
-  "symbol": "4755.T",
+  "url": "https://example.com",
   "content": "<html>...</html>",
   "error": null
 }
@@ -34,9 +34,9 @@ Once deployed as a Web App, you can access it via a GET request:
 
 ```json
 {
-  "symbol": null,
+  "url": null,
   "content": null,
-  "error": "Error: Missing required parameter: s"
+  "error": "Error: Missing required parameter: u"
 }
 ```
 
@@ -64,6 +64,6 @@ npm test
 ## Code Explanation
 
 - `doGet(e)`: The entry point for GET requests.
-- `UrlFetchApp`: Used to fetch external data from Yahoo Finance.
+- URL Validation: Ensures the `u` parameter is present and correctly formatted.
+- `UrlFetchApp`: Used to fetch external data.
 - `ContentService`: Used to return the response as a JSON string with the correct MIME type.
-- Error handling: Uses `try...catch` to capture any issues and return them in the `error` field of the response.

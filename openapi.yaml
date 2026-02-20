@@ -1,23 +1,24 @@
 openapi: 3.0.0
 info:
-  title: Yahoo Finance JP Fetcher API
-  description: A GAS Web App to fetch HTML content from Yahoo Finance JP.
-  version: 1.0.0
+  title: General Purpose URL Fetcher API
+  description: A GAS Web App to fetch content from any provided URL.
+  version: 1.1.0
 servers:
   - url: https://script.google.com/macros/s/AKfycbx6iFGnB5EaSVedN5mk8F1L0iO9orwZZiOz_2m6wIRzHA1XsU555ib0Ex2LMCR1nLOvhw
     description: Production server
 paths:
   /exec:
     get:
-      summary: Fetch Yahoo Finance JP quote page content.
+      summary: Fetch content from a target URL.
       parameters:
-        - name: s
+        - name: u
           in: query
-          description: Ticker symbol.
+          description: Target URL (http or https).
           required: true
           schema:
             type: string
-            example: "4755.T"
+            format: uri
+            example: "https://example.com"
       responses:
         '200':
           description: Successful response
@@ -26,7 +27,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  symbol:
+                  url:
                     type: string
                     nullable: true
                   content:

@@ -1,47 +1,51 @@
 /**
  * Handles GET requests to the web app.
- * Fetches the HTML content of a Yahoo Finance JP quote page for a given symbol.
+ * Fetches the HTML content of a given URL.
  *
  * @param {Object} e The event object from GAS.
  * @param {Object} e.parameter Query parameters.
- * @param {string} e.parameter.s The ticker symbol.
+ * @param {string} e.parameter.u The target URL to fetch.
  * @returns {GoogleAppsScript.Content.TextOutput} JSON response.
  */
 function doGet(e) {
   const result = {
-    symbol: null,
+    url: null,
     content: null,
     error: null
   };
 
   try {
-    // 1. Get symbol from query parameter 's'
-    const symbol = e && e.parameter && e.parameter.s;
-    if (!symbol) {
-      throw new Error('Missing required parameter: s');
+    // 1. Get URL from query parameter 'u'
+    const url = e && e.parameter && e.parameter.u;
+    if (!url) {
+      throw new Error('Missing required parameter: u');
     }
-    result.symbol = symbol;
+    result.url = url;
 
-    // 2. Fetch data from Yahoo Finance JP
-    const url = 'https://finance.yahoo.co.jp/quote/' + encodeURIComponent(symbol);
+    // 2. Validate URL format
+    if (!/^https?:\/\/.+/.test(url)) {
+      throw new Error('Invalid URL format. Must start with http:// or https://');
+    }
+
+    // 3. Fetch data from the provided URL
     const fetchResponse = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true
     });
 
-    // 3. Check response status
+    // 4. Check response status
     const responseCode = fetchResponse.getResponseCode();
     if (responseCode !== 200) {
-      throw new Error('Yahoo Finance returned HTTP ' + responseCode);
+      throw new Error('Target URL returned HTTP ' + responseCode);
     }
 
-    // 4. Set the content
+    // 5. Set the content
     result.content = fetchResponse.getContentText();
   } catch (error) {
-    // 5. Handle errors
+    // 6. Handle errors
     result.error = error.toString();
   }
 
-  // 6. Return structured JSON response
+  // 7. Return structured JSON response
   return ContentService.createTextOutput(JSON.stringify(result))
     .setMimeType(ContentService.MimeType.JSON);
 }
