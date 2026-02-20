@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: General Purpose URL Fetcher API
+  description: A GAS Web App to fetch content from any provided URL.
+  version: 1.1.0
+servers:
+  - url: https://script.google.com/macros/s/AKfycbx6iFGnB5EaSVedN5mk8F1L0iO9orwZZiOz_2m6wIRzHA1XsU555ib0Ex2LMCR1nLOvhw
+    description: Production server
+paths:
+  /exec:
+    get:
+      summary: Fetch content from a target URL.
+      parameters:
+        - name: u
+          in: query
+          description: Target URL (http or https).
+          required: true
+          schema:
+            type: string
+            format: uri
+            example: "https://example.com"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  error:
+                    type: string
+                    nullable: true
